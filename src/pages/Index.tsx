@@ -1,12 +1,160 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import React from "react";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
+import { ArrowRight, CheckCircle, Shield, Sun, Upload, DownloadCloud } from "lucide-react";
 
 const Index = () => {
+  const navigate = useNavigate();
+  
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
+    <div className="min-h-screen bg-gradient-to-b from-background to-muted">
+      {/* Hero Section */}
+      <div className="hero-gradient text-white">
+        <div className="container mx-auto px-4 py-20 lg:py-32 flex flex-col lg:flex-row items-center gap-12">
+          <div className="lg:w-1/2 space-y-6">
+            <h1 className="text-4xl lg:text-6xl font-bold leading-tight">
+              AUITS Customer Engagement & Support Application
+            </h1>
+            <p className="text-xl opacity-90">
+              A comprehensive platform designed for solar energy customers to access support, 
+              track service requests, and manage their solar systems effectively.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <Button 
+                size="lg" 
+                className="bg-white text-auits-600 hover:bg-gray-100"
+                onClick={() => navigate("/login")}
+              >
+                Get Started <ArrowRight className="ml-2 h-5 w-5" />
+              </Button>
+              <Button 
+                size="lg" 
+                variant="outline" 
+                className="border-white text-white hover:bg-white/10"
+              >
+                Learn More
+              </Button>
+            </div>
+          </div>
+          <div className="lg:w-1/2">
+            <img 
+              src="/lovable-uploads/fcdb3daa-a6e7-444e-83e8-70fd88ba62ba.png" 
+              alt="Solar Energy Solution" 
+              className="w-full rounded-lg shadow-2xl"
+            />
+          </div>
+        </div>
       </div>
+      
+      {/* Features */}
+      <div className="container mx-auto px-4 py-20">
+        <div className="text-center mb-16">
+          <h2 className="text-3xl lg:text-4xl font-bold mb-4 gradient-text">
+            Core Features
+          </h2>
+          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+            Our platform is designed to streamline your solar energy experience with powerful tools 
+            and intuitive interfaces.
+          </p>
+        </div>
+        
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {[
+            {
+              title: "Customer Support",
+              description: "Raise and track service tickets with our intuitive ticketing system",
+              icon: <CheckCircle className="h-10 w-10 text-auits-600" />
+            },
+            {
+              title: "User Account",
+              description: "Secure login with personalized dashboard for your solar system",
+              icon: <Shield className="h-10 w-10 text-solar-600" />
+            },
+            {
+              title: "Admin Dashboard",
+              description: "Monitor and manage customer interactions and support requests",
+              icon: <Sun className="h-10 w-10 text-yellow-500" />
+            },
+            {
+              title: "Payment Integration",
+              description: "Make secure payments for services and maintenance",
+              icon: <Upload className="h-10 w-10 text-green-500" />
+            }
+          ].map((feature, index) => (
+            <div 
+              key={index}
+              className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
+            >
+              <div className="mb-4">{feature.icon}</div>
+              <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+              <p className="text-muted-foreground">{feature.description}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+      
+      {/* CTA Section */}
+      <div className="bg-solar-900 text-white py-16">
+        <div className="container mx-auto px-4 text-center">
+          <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
+          <p className="text-lg mb-8 max-w-2xl mx-auto">
+            Join thousands of satisfied customers who are already using our platform 
+            to manage their solar energy systems.
+          </p>
+          <Button 
+            size="lg" 
+            className="bg-white text-solar-900 hover:bg-gray-100"
+            onClick={() => navigate("/login")}
+          >
+            Sign Up Now
+          </Button>
+        </div>
+      </div>
+      
+      {/* Footer */}
+      <footer className="bg-gray-900 text-white py-12">
+        <div className="container mx-auto px-4">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+              <div className="flex items-center gap-2 mb-4">
+                <div className="h-8 w-8 rounded-full bg-white flex items-center justify-center">
+                  <img
+                    src="/lovable-uploads/43bdef48-c3ad-42fe-8ae5-fd7f4e37c15a.png"
+                    alt="AUITS Logo"
+                    className="h-6 w-6"
+                  />
+                </div>
+                <h2 className="font-bold text-xl">AUITS Connect</h2>
+              </div>
+              <p className="text-gray-400">
+                A leader in sustainable solar energy solutions since 2013, specializing in providing 
+                high-efficiency solar systems for residential, commercial, and industrial needs.
+              </p>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-4 text-lg">Quick Links</h3>
+              <div className="space-y-2">
+                <a href="#" className="block text-gray-400 hover:text-white">About Us</a>
+                <a href="#" className="block text-gray-400 hover:text-white">Services</a>
+                <a href="#" className="block text-gray-400 hover:text-white">Support</a>
+                <a href="#" className="block text-gray-400 hover:text-white">Contact</a>
+              </div>
+            </div>
+            <div>
+              <h3 className="font-semibold mb-4 text-lg">Contact Information</h3>
+              <div className="space-y-2 text-gray-400">
+                <p>Email: support@auits.com</p>
+                <p>Phone: (123) 456-7890</p>
+                <p>Address: 123 Solar Street, Renewable City</p>
+              </div>
+            </div>
+          </div>
+          <div className="border-t border-gray-800 mt-8 pt-8 text-center text-gray-500">
+            <p>© 2025 AUITS Pvt Ltd. All rights reserved.</p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 };

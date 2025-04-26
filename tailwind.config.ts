@@ -1,3 +1,4 @@
+
 import type { Config } from "tailwindcss";
 
 export default {
@@ -61,6 +62,32 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				solar: {
+					50: '#f0f9ff',
+					100: '#dcf2ff',
+					200: '#c1e8ff',
+					300: '#94d8ff',
+					400: '#61c0ff',
+					500: '#399eff',
+					600: '#1b77f2',
+					700: '#1a64e0',
+					800: '#1b51b6',
+					900: '#1d488f',
+					950: '#162a50'
+				},
+				auits: {
+					50: '#f2f0ff',
+					100: '#ede8ff',
+					200: '#ded5ff',
+					300: '#c7b4ff',
+					400: '#aa8aff',
+					500: '#8b57ff',
+					600: '#7935f9',
+					700: '#6821e7',
+					800: '#561bc0',
+					900: '#481a9c',
+					950: '#2c0f67'
 				}
 			},
 			borderRadius: {
@@ -84,11 +111,31 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'fade-in': {
+					'0%': {
+						opacity: '0',
+						transform: 'translateY(10px)'
+					},
+					'100%': {
+						opacity: '1',
+						transform: 'translateY(0)'
+					}
+				},
+				'pulse-light': {
+					'0%, 100%': { opacity: '1' },
+					'50%': { opacity: '0.8' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'fade-in': 'fade-in 0.5s ease-out',
+				'pulse-light': 'pulse-light 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+			},
+			backgroundImage: {
+				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+				'solar-pattern': "url('/public/lovable-uploads/977c6cec-5549-498d-bffa-280f659ed8cd.png')"
 			}
 		}
 	},
