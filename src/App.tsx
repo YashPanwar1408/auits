@@ -11,6 +11,8 @@ import Tickets from "./pages/Tickets";
 import NewTicket from "./pages/NewTicket";
 import KnowledgeBase from "./pages/KnowledgeBase";
 import Billing from "./pages/Billing";
+import Help from "./pages/Help";
+import Settings from "./pages/Settings";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -29,6 +31,8 @@ const App = () => (
           <Route path="/tickets/new" element={<NewTicket />} />
           <Route path="/knowledge" element={<KnowledgeBase />} />
           <Route path="/billing" element={<Billing />} />
+          <Route path="/help" element={<Help />} />
+          <Route path="/settings" element={<Settings />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
