@@ -14,7 +14,6 @@ import {
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Download, FileText, Plus } from "lucide-react";
-import { ChatBot } from "@/components/ChatBot";
 import { Badge } from "@/components/ui/badge";
 
 const payments = [
@@ -232,7 +231,6 @@ const Billing = () => {
           </TabsContent>
         </Tabs>
       </div>
-      <ChatBot />
     </Layout>
   );
 };

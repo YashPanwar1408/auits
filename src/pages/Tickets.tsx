@@ -6,7 +6,6 @@ import { Plus, Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { TicketList } from "@/components/TicketList";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ChatBot } from "@/components/ChatBot";
 import { useNavigate } from "react-router-dom";
 
 const Tickets = () => {
@@ -64,7 +63,6 @@ const Tickets = () => {
           </TabsContent>
         </Tabs>
       </div>
-      <ChatBot />
     </Layout>
   );
 };

@@ -2,7 +2,7 @@
 import React from "react";
 import { Layout } from "@/components/Layout";
 import { KnowledgeBase as KnowledgeBaseComponent } from "@/components/KnowledgeBase";
-import { ChatBot } from "@/components/ChatBot";
+
 
 const KnowledgeBasePage = () => {
   return (
@@ -17,7 +17,7 @@ const KnowledgeBasePage = () => {
 
         <KnowledgeBaseComponent />
       </div>
-      <ChatBot />
+      
     </Layout>
   );
 };

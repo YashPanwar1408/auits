@@ -5,7 +5,6 @@ import { DashboardStats } from "@/components/DashboardStats";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { ChatBot } from "@/components/ChatBot";
 import { AlertCircle, Bell, CheckCircle, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
@@ -173,7 +172,6 @@ const Dashboard = () => {
         </div>
 
       </div>
-      <ChatBot />
     </Layout>
   );
 };
