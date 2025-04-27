@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Card,
@@ -162,16 +161,6 @@ export const PaymentForm = () => {
                     <SelectItem value="gbp">GBP</SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
-              <div className="pl-6">
-                <Input 
-                  id="amount" 
-                  placeholder="100.00" 
-                  required
-                  type="number"
-                  step="0.01"
-                  min="1"
-                />
               </div>
             </div>
           </div>
