@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import {
   Card,
@@ -27,7 +26,7 @@ export const PaymentForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   const [amount, setAmount] = useState("100.00");
-  const [currency, setCurrency] = useState("inr");
+  const [currency, setCurrency] = useState("INR");
   const [purpose, setPurpose] = useState("maintenance");
   const { toast } = useToast();
   const { user } = useAuth();
@@ -134,7 +133,7 @@ export const PaymentForm = () => {
     } catch (error: any) {
       toast({
         title: "Payment Error",
-        description: error.message || "Failed to process payment",
+        description: typeof error === "object" ? JSON.stringify(error) : error.message || "Failed to process payment",
         variant: "destructive",
       });
     } finally {
@@ -191,8 +190,7 @@ export const PaymentForm = () => {
                     <SelectValue placeholder="INR" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="inr">INR</SelectItem>
-                    <SelectItem value="usd">USD</SelectItem>
+                    <SelectItem value="INR">INR</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
