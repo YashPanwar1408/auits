@@ -53,7 +53,14 @@ const payments = [
     description: "System Upgrade Service",
   },
 ];
-
+const Innvoice = () => {
+  const link = document.createElement('a');
+  link.href = '/downloads/innvoice.png'; // Make sure this is the correct path
+  link.download = 'innvoice.png'; // The name you want the file to be downloaded as
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
 const Billing = () => {
   return (
     <Layout>
@@ -105,7 +112,7 @@ const Billing = () => {
                         </Badge>
                       </TableCell>
                       <TableCell className="text-right">
-                        <Button variant="ghost" size="icon">
+                        <Button onClick={Innvoice} variant="ghost" size="icon">
                           <Download className="h-4 w-4" />
                         </Button>
                       </TableCell>
