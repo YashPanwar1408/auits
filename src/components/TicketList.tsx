@@ -101,7 +101,14 @@ export const TicketList: React.FC<TicketListProps> = ({ filter }) => {
       </div>
     );
   }
-
+  const ticketDownload = () => {
+    const link = document.createElement('a');
+    link.href = '/downloads/TicketDownload.png'; // Make sure this is the correct path
+    link.download = 'TicketDownload.png';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
   return (
     <div className="rounded-md border">
       <Table>
@@ -144,17 +151,11 @@ export const TicketList: React.FC<TicketListProps> = ({ filter }) => {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => navigate(`/tickets/${ticket.id}`)}
+                    onClick={ticketDownload}
                   >
                     <Eye className="h-4 w-4 mr-1" /> View
                   </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => navigate(`/tickets/${ticket.id}`)}
-                  >
-                    <MessageSquare className="h-4 w-4 mr-1" /> Respond
-                  </Button>
+                  
                 </div>
               </TableCell>
             </TableRow>
