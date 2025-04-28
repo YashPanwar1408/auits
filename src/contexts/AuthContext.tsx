@@ -80,7 +80,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: 'https://auits-customercare-service.vercel.app/dashboard'
+          redirectTo: 'https://preview--auits.lovable.app/dashboard'
         }
       });
 
