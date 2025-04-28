@@ -110,15 +110,9 @@ const Index = () => {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
-              <div className="flex items-center gap-2 mb-4">
-                <div className="h-8 w-8 rounded-full bg-white flex items-center justify-center">
-                  <img
-                    src="/lovable-uploads/43bdef48-c3ad-42fe-8ae5-fd7f4e37c15a.png"
-                    alt="AUITS Logo"
-                    className="h-6 w-6"
-                  />
-                </div>
-                <h2 className="font-bold text-xl">AUITS Connect</h2>
+              <div className="flex items-center gap-3 mb-8 px-4 pt-6">
+                <img src="/lovable-uploads/logo.png" alt="AUITS Logo" className="w-10 h-10 rounded-full object-cover border-2 border-white" />
+                <h1 className="font-bold text-2xl text-white">AUITS Connect</h1>
               </div>
               <p className="text-gray-400">
                 A leader in sustainable solar energy solutions since 2013, specializing in providing 
@@ -137,9 +131,8 @@ const Index = () => {
             <div>
               <h3 className="font-semibold mb-4 text-lg">Contact Information</h3>
               <div className="space-y-2 text-gray-400">
-                <p>Email: support@auits.com</p>
-                <p>Phone: (123) 456-7890</p>
-                <p>Address: 123 Solar Street, Renewable City</p>
+                <p>Email: info@auitspl.com</p>
+                <p>Phone/WhatsApp: +91 9911791555</p>
               </div>
             </div>
           </div>

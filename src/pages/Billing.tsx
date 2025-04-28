@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Layout } from "@/components/Layout";
 import { PaymentForm } from "@/components/PaymentForm";
 import { Button } from "@/components/ui/button";
@@ -55,6 +55,7 @@ const Billing = () => {
   const [payments, setPayments] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("payment");
+  const paymentSectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchPayments = async () => {
@@ -155,7 +156,12 @@ const Billing = () => {
                 </div>
 
                 <div className="pt-4">
-                  <Button className="w-full" onClick={() => setActiveTab("payment")}>
+                  <Button className="w-full" onClick={() => {
+                    setActiveTab("payment");
+                    setTimeout(() => {
+                      paymentSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                    }, 100);
+                  }}>
                     <Plus className="mr-2 h-4 w-4" /> Make a Payment
                   </Button>
                 </div>
@@ -181,6 +187,7 @@ const Billing = () => {
           </div>
         </div>
 
+        <div ref={paymentSectionRef}></div>
         <Tabs defaultValue="payment" className="w-full max-w-3xl mx-auto" value={activeTab}>
           <TabsList className="w-full">
             <TabsTrigger value="payment">Make a Payment</TabsTrigger>
