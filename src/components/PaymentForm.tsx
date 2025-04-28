@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import {
   Card,
@@ -19,31 +20,197 @@ import {
 } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { CreditCard, CheckCircle, Loader2 } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
+
+declare global {
+  interface Window {
+    Razorpay: any;
+  }
+}
 
 export const PaymentForm = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+  const [amount, setAmount] = useState("100.00");
+  const [currency, setCurrency] = useState("inr");
+  const [purpose, setPurpose] = useState("maintenance");
   const { toast } = useToast();
+  const { user } = useAuth();
 
-  const handlePayment = (e: React.FormEvent) => {
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => {
+        resolve(true);
+      };
+      script.onerror = () => {
+        resolve(false);
+      };
+      document.body.appendChild(script);
+    });
+  };
+
+  const createRazorpayOrder = async () => {
+    try {
+      const response = await fetch(
+        "https://zbbvmrwcwocovbetiofq.supabase.co/functions/v1/razorpay-payment",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${supabase.auth.getSession().then(({ data }) => data.session?.access_token)}`,
+          },
+          body: JSON.stringify({
+            action: "create_order",
+            data: {
+              amount: parseFloat(amount),
+              currency: currency,
+              payment_purpose: purpose,
+            },
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to create order");
+      }
+
+      return await response.json();
+    } catch (error: any) {
+      console.error("Order creation error:", error);
+      throw new Error(error.message || "Error creating payment order");
+    }
+  };
+
+  const verifyPayment = async (paymentData: any) => {
+    try {
+      const response = await fetch(
+        "https://zbbvmrwcwocovbetiofq.supabase.co/functions/v1/razorpay-payment",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${supabase.auth.getSession().then(({ data }) => data.session?.access_token)}`,
+          },
+          body: JSON.stringify({
+            action: "verify_payment",
+            data: paymentData,
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Payment verification failed");
+      }
+
+      return await response.json();
+    } catch (error: any) {
+      console.error("Payment verification error:", error);
+      throw new Error(error.message || "Error verifying payment");
+    }
+  };
+
+  const savePaymentToDatabase = async (paymentData: any, verified: boolean) => {
+    try {
+      const { data, error } = await supabase.from("payments").insert([
+        {
+          user_id: user?.id,
+          amount: parseFloat(amount),
+          currency: currency,
+          payment_purpose: purpose,
+          razorpay_payment_id: paymentData.razorpay_payment_id,
+          razorpay_order_id: paymentData.razorpay_order_id,
+          razorpay_signature: paymentData.razorpay_signature,
+          status: verified ? "completed" : "failed",
+        },
+      ]);
+
+      if (error) {
+        console.error("Payment save error:", error);
+        throw new Error("Failed to save payment information");
+      }
+
+      return data;
+    } catch (error: any) {
+      console.error("Database save error:", error);
+      throw new Error(error.message || "Error saving payment");
+    }
+  };
+
+  const handlePayment = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
-    // Simulate payment processing
-    setTimeout(() => {
-      setIsLoading(false);
-      setPaymentSuccess(true);
-      
-      toast({
-        title: "Payment successful!",
-        description: "Your payment has been processed successfully.",
-      });
+    try {
+      // Load Razorpay script dynamically
+      const scriptLoaded = await loadRazorpayScript();
+      if (!scriptLoaded) {
+        throw new Error("Razorpay SDK failed to load");
+      }
 
-      // Reset form after a delay
-      setTimeout(() => {
-        setPaymentSuccess(false);
-      }, 3000);
-    }, 2000);
+      // Create order
+      const orderData = await createRazorpayOrder();
+      const options = {
+        key: "rzp_test_XsaFr0VmwS1kajL", // Your Razorpay Key ID
+        amount: orderData.amount,
+        currency: orderData.currency,
+        name: "AUITS Connect",
+        description: `Payment for ${purpose}`,
+        order_id: orderData.id,
+        handler: async (response: any) => {
+          try {
+            const verificationResult = await verifyPayment(response);
+            
+            if (verificationResult.valid) {
+              await savePaymentToDatabase(response, true);
+              setPaymentSuccess(true);
+              toast({
+                title: "Payment Successful",
+                description: "Your payment has been processed successfully.",
+              });
+            } else {
+              await savePaymentToDatabase(response, false);
+              toast({
+                title: "Payment Failed",
+                description: "Payment signature verification failed.",
+                variant: "destructive",
+              });
+            }
+          } catch (error: any) {
+            console.error("Payment process error:", error);
+            toast({
+              title: "Payment Error",
+              description: error.message || "An error occurred during payment processing",
+              variant: "destructive",
+            });
+          } finally {
+            setIsLoading(false);
+          }
+        },
+        prefill: {
+          name: user?.user_metadata?.full_name || "John Doe",
+          email: user?.email || "customer@example.com",
+        },
+        theme: {
+          color: "#7C3AED",
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (error: any) {
+      console.error("Payment initialization error:", error);
+      toast({
+        title: "Payment Error",
+        description: error.message || "Failed to initialize payment",
+        variant: "destructive",
+      });
+      setIsLoading(false);
+    }
   };
 
   if (paymentSuccess) {
@@ -71,71 +238,11 @@ export const PaymentForm = () => {
       <CardHeader>
         <CardTitle>Payment Information</CardTitle>
         <CardDescription>
-          Enter your card details to make a secure payment
+          Enter your payment details to make a secure payment
         </CardDescription>
       </CardHeader>
       <form onSubmit={handlePayment}>
         <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="name">Cardholder Name</Label>
-            <Input id="name" placeholder="John Doe" required />
-          </div>
-          
-          <div className="space-y-2">
-            <Label htmlFor="card">Card Number</Label>
-            <div className="relative">
-              <Input 
-                id="card" 
-                placeholder="4242 4242 4242 4242" 
-                required
-                maxLength={19}
-                // Format card number with spaces
-                onInput={(e) => {
-                  const target = e.target as HTMLInputElement;
-                  let value = target.value.replace(/\D/g, '');
-                  if (value.length > 0) {
-                    value = value.match(/.{1,4}/g)?.join(' ') || '';
-                  }
-                  target.value = value;
-                }}
-              />
-              <CreditCard className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="expiry">Expiry Date</Label>
-              <Input 
-                id="expiry" 
-                placeholder="MM/YY" 
-                required
-                maxLength={5}
-                onInput={(e) => {
-                  const target = e.target as HTMLInputElement;
-                  let value = target.value.replace(/\D/g, '');
-                  if (value.length > 2) {
-                    value = `${value.slice(0, 2)}/${value.slice(2, 4)}`;
-                  }
-                  target.value = value;
-                }}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="cvc">CVC</Label>
-              <Input 
-                id="cvc" 
-                placeholder="123" 
-                required 
-                maxLength={3}
-                onInput={(e) => {
-                  const target = e.target as HTMLInputElement;
-                  target.value = target.value.replace(/\D/g, '');
-                }}
-              />
-            </div>
-          </div>
-          
           <div className="space-y-2">
             <Label htmlFor="amount">Amount</Label>
             <div className="relative">
@@ -146,16 +253,19 @@ export const PaymentForm = () => {
                 type="number"
                 step="0.01"
                 min="1"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
               />
               <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
                 $
               </div>
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
-                <Select defaultValue="usd">
+                <Select value={currency} onValueChange={setCurrency}>
                   <SelectTrigger className="w-[80px] h-8 border-0 bg-transparent">
                     <SelectValue placeholder="USD" />
                   </SelectTrigger>
                   <SelectContent>
+                    <SelectItem value="inr">INR</SelectItem>
                     <SelectItem value="usd">USD</SelectItem>
                     <SelectItem value="eur">EUR</SelectItem>
                     <SelectItem value="gbp">GBP</SelectItem>
@@ -167,7 +277,7 @@ export const PaymentForm = () => {
           
           <div className="space-y-2">
             <Label htmlFor="purpose">Payment Purpose</Label>
-            <Select defaultValue="maintenance">
+            <Select value={purpose} onValueChange={setPurpose}>
               <SelectTrigger>
                 <SelectValue placeholder="Select purpose" />
               </SelectTrigger>

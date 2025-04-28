@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Table,
   TableBody,
@@ -12,52 +12,16 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { MessageSquare, Eye } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
 interface Ticket {
   id: string;
   title: string;
-  date: string;
+  created_at: string;
   status: "open" | "in-progress" | "resolved" | "closed";
-  priority: "low" | "medium" | "high";
+  priority: "low" | "medium" | "high" | "urgent";
 }
-
-const tickets: Ticket[] = [
-  {
-    id: "TICKET-1234",
-    title: "Solar panel not generating expected output",
-    date: "2025-04-15",
-    status: "open",
-    priority: "high",
-  },
-  {
-    id: "TICKET-1233",
-    title: "Inverter showing error code E-13",
-    date: "2025-04-12",
-    status: "in-progress",
-    priority: "high",
-  },
-  {
-    id: "TICKET-1232",
-    title: "Request for system maintenance",
-    date: "2025-04-10",
-    status: "in-progress",
-    priority: "medium",
-  },
-  {
-    id: "TICKET-1231",
-    title: "Question about monthly report",
-    date: "2025-04-05",
-    status: "resolved",
-    priority: "low",
-  },
-  {
-    id: "TICKET-1230",
-    title: "Battery backup system inquiry",
-    date: "2025-03-28",
-    status: "closed",
-    priority: "medium",
-  },
-];
 
 const statusColors = {
   open: "bg-yellow-500 hover:bg-yellow-600",
@@ -70,10 +34,73 @@ const priorityVariants = {
   low: "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300",
   medium: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300",
   high: "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300",
+  urgent: "bg-red-500 text-white dark:bg-red-600 dark:text-white",
 };
 
-export const TicketList = () => {
+interface TicketListProps {
+  filter?: string;
+}
+
+export const TicketList: React.FC<TicketListProps> = ({ filter }) => {
+  const [tickets, setTickets] = useState<Ticket[]>([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    const fetchTickets = async () => {
+      try {
+        setLoading(true);
+        let query = supabase
+          .from("tickets")
+          .select("*")
+          .eq("user_id", user?.id);
+
+        if (filter && filter !== "all") {
+          query = query.eq("status", filter);
+        }
+
+        const { data, error } = await query.order("created_at", { ascending: false });
+
+        if (error) {
+          console.error("Error fetching tickets:", error);
+          return;
+        }
+
+        setTickets(data as Ticket[]);
+      } catch (error) {
+        console.error("Error in fetchTickets:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (user) {
+      fetchTickets();
+    }
+  }, [user, filter]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center py-12">
+        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (tickets.length === 0) {
+    return (
+      <div className="text-center py-12 border rounded-md">
+        <h3 className="text-lg font-medium mb-2">No tickets found</h3>
+        <p className="text-muted-foreground mb-4">
+          {filter && filter !== "all"
+            ? `You don't have any ${filter} tickets`
+            : "You haven't created any tickets yet"}
+        </p>
+        <Button onClick={() => navigate("/tickets/new")}>Create New Ticket</Button>
+      </div>
+    );
+  }
 
   return (
     <div className="rounded-md border">
@@ -91,9 +118,11 @@ export const TicketList = () => {
         <TableBody>
           {tickets.map((ticket) => (
             <TableRow key={ticket.id}>
-              <TableCell className="font-medium">{ticket.id}</TableCell>
+              <TableCell className="font-medium">
+                {ticket.id.substring(0, 8).toUpperCase()}
+              </TableCell>
               <TableCell>{ticket.title}</TableCell>
-              <TableCell>{ticket.date}</TableCell>
+              <TableCell>{new Date(ticket.created_at).toLocaleDateString()}</TableCell>
               <TableCell>
                 <Badge
                   variant="outline"

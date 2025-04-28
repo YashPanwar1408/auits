@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useState } from "react";
 import { Layout } from "@/components/Layout";
 import { Button } from "@/components/ui/button";
 import { Plus, Search } from "lucide-react";
@@ -10,6 +10,8 @@ import { useNavigate } from "react-router-dom";
 
 const Tickets = () => {
   const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
 
   return (
     <Layout>
@@ -32,13 +34,20 @@ const Tickets = () => {
             <Input
               placeholder="Search tickets..."
               className="pl-8"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
           <Button variant="outline">Filter</Button>
           <Button variant="outline">Sort</Button>
         </div>
 
-        <Tabs defaultValue="all" className="w-full">
+        <Tabs 
+          defaultValue="all" 
+          className="w-full"
+          value={activeTab}
+          onValueChange={setActiveTab}
+        >
           <TabsList>
             <TabsTrigger value="all">All Tickets</TabsTrigger>
             <TabsTrigger value="open">Open</TabsTrigger>
@@ -50,16 +59,16 @@ const Tickets = () => {
             <TicketList />
           </TabsContent>
           <TabsContent value="open" className="pt-6">
-            <TicketList />
+            <TicketList filter="open" />
           </TabsContent>
           <TabsContent value="in-progress" className="pt-6">
-            <TicketList />
+            <TicketList filter="in-progress" />
           </TabsContent>
           <TabsContent value="resolved" className="pt-6">
-            <TicketList />
+            <TicketList filter="resolved" />
           </TabsContent>
           <TabsContent value="closed" className="pt-6">
-            <TicketList />
+            <TicketList filter="closed" />
           </TabsContent>
         </Tabs>
       </div>

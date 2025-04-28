@@ -2,7 +2,7 @@
 import React from "react";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from "@/components/ui/sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { NavLink, useLocation } from "react-router-dom";
+import { NavLink, useLocation, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { 
   Sun, 
@@ -20,6 +20,7 @@ import {
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAuth } from "@/contexts/AuthContext";
 import { useToast } from "@/hooks/use-toast";
 
 interface LayoutProps {
@@ -29,8 +30,10 @@ interface LayoutProps {
 export const Layout = ({ children }: LayoutProps) => {
   const [theme, setTheme] = React.useState<"light" | "dark">("light");
   const isMobile = useIsMobile();
-  const { toast } = useToast();
+  const navigate = useNavigate();
   const location = useLocation();
+  const { user, signOut, profile } = useAuth();
+  const { toast } = useToast();
 
   React.useEffect(() => {
     const isDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -52,13 +55,9 @@ export const Layout = ({ children }: LayoutProps) => {
     });
   };
 
-  const handleLogout = () => {
-    toast({
-      title: "Logged out successfully",
-      description: "You have been logged out of your account",
-    });
-    // In a real app, we would clear authentication state here
-    window.location.href = "/login";
+  const handleLogout = async () => {
+    await signOut();
+    navigate("/login");
   };
 
   const navigationItems = [
@@ -68,8 +67,29 @@ export const Layout = ({ children }: LayoutProps) => {
     { name: "Knowledge Base", path: "/knowledge", icon: FileText },
     { name: "Billing", path: "/billing", icon: CreditCard },
     { name: "Help", path: "/help", icon: HelpCircle },
+    { name: "User Dashboard", path: "/user", icon: User },
     { name: "Settings", path: "/settings", icon: Settings },
   ];
+
+  const getInitials = () => {
+    if (user?.user_metadata?.full_name) {
+      return user.user_metadata.full_name.split(' ').map((n: string) => n[0]).join('').toUpperCase();
+    }
+    if (profile && (profile.first_name || profile.last_name)) {
+      return `${profile.first_name?.[0] || ''}${profile.last_name?.[0] || ''}`.toUpperCase();
+    }
+    return user?.email?.substring(0, 2).toUpperCase() || "U";
+  };
+
+  const getDisplayName = () => {
+    if (user?.user_metadata?.full_name) {
+      return user.user_metadata.full_name;
+    }
+    if (profile && (profile.first_name || profile.last_name)) {
+      return `${profile.first_name || ''} ${profile.last_name || ''}`.trim();
+    }
+    return user?.email?.split('@')[0] || "User";
+  };
 
   const AppSidebar = () => (
     <Sidebar>
@@ -115,12 +135,12 @@ export const Layout = ({ children }: LayoutProps) => {
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="User" />
-              <AvatarFallback className="bg-sidebar-accent text-white">JD</AvatarFallback>
+              <AvatarImage src={user?.user_metadata?.avatar_url || profile?.avatar_url} alt="User" />
+              <AvatarFallback className="bg-sidebar-accent text-white">{getInitials()}</AvatarFallback>
             </Avatar>
             <div>
-              <p className="text-sm text-white font-medium">John Doe</p>
-              <p className="text-xs text-white/70">john@example.com</p>
+              <p className="text-sm text-white font-medium">{getDisplayName()}</p>
+              <p className="text-xs text-white/70">{user?.email}</p>
             </div>
           </div>
           <Button 
@@ -161,11 +181,11 @@ export const Layout = ({ children }: LayoutProps) => {
               {!isMobile && (
                 <div className="flex items-center gap-3">
                   <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" alt="User" />
-                    <AvatarFallback className="bg-primary text-white">JD</AvatarFallback>
+                    <AvatarImage src={user?.user_metadata?.avatar_url || profile?.avatar_url} alt="User" />
+                    <AvatarFallback className="bg-primary text-white">{getInitials()}</AvatarFallback>
                   </Avatar>
                   <div className="hidden md:block">
-                    <p className="text-sm font-medium">John Doe</p>
+                    <p className="text-sm font-medium">{getDisplayName()}</p>
                     <p className="text-xs text-muted-foreground">Customer</p>
                   </div>
                 </div>

@@ -21,25 +21,61 @@ import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Upload, X } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 export const CreateTicketForm = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [files, setFiles] = useState<File[]>([]);
+  const [title, setTitle] = useState("");
+  const [category, setCategory] = useState("");
+  const [priority, setPriority] = useState("");
+  const [description, setDescription] = useState("");
   const { toast } = useToast();
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false);
+    try {
+      // Create ticket in the database
+      const { data, error } = await supabase
+        .from("tickets")
+        .insert([
+          {
+            user_id: user?.id,
+            title,
+            description,
+            category,
+            priority,
+            status: "open"
+          },
+        ])
+        .select();
+
+      if (error) {
+        throw new Error(error.message);
+      }
+
       toast({
         title: "Ticket submitted successfully",
         description: "Our support team will contact you soon",
       });
-      // Reset form (would be handled by a form library in a real app)
-    }, 1500);
+      
+      // Redirect to tickets page
+      navigate("/tickets");
+    } catch (error: any) {
+      toast({
+        title: "Error submitting ticket",
+        description: error.message || "An error occurred while submitting your ticket",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -65,13 +101,23 @@ export const CreateTicketForm = () => {
         <CardContent className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="title">Ticket Title</Label>
-            <Input id="title" placeholder="Brief description of your issue" required />
+            <Input 
+              id="title" 
+              placeholder="Brief description of your issue" 
+              required 
+              value={title}
+              onChange={(e) => setTitle(e.target.value)}
+            />
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="category">Category</Label>
-              <Select required>
+              <Select 
+                required 
+                value={category}
+                onValueChange={setCategory}
+              >
                 <SelectTrigger id="category">
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
@@ -86,7 +132,11 @@ export const CreateTicketForm = () => {
             
             <div className="space-y-2">
               <Label htmlFor="priority">Priority</Label>
-              <Select required>
+              <Select 
+                required 
+                value={priority}
+                onValueChange={setPriority}
+              >
                 <SelectTrigger id="priority">
                   <SelectValue placeholder="Select priority" />
                 </SelectTrigger>
@@ -107,6 +157,8 @@ export const CreateTicketForm = () => {
               placeholder="Please provide as much detail as possible about your issue" 
               rows={5}
               required
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
             />
           </div>
           
