@@ -121,7 +121,22 @@ export function KnowledgeBase() {
         tag.toLowerCase().includes(searchQuery.toLowerCase())
       )
   );
-
+  const handleGuideDownload = () => {
+    const link = document.createElement('a');
+    link.href = '/downloads/solar_system_knowledge_base.pdf'; // Make sure this is the correct path
+    link.download = 'solar_system_knowledge_base.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
+  const handleManualDownload = () => {
+    const link = document.createElement('a');
+    link.href = '/downloads/Manual.pdf'; // Make sure this is the correct path
+    link.download = 'User_Manual.pdf';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
   return (
     <div className="space-y-6">
       <div className="relative">
@@ -191,7 +206,7 @@ export function KnowledgeBase() {
                   <CardDescription className="mb-4">
                     {guide.description}
                   </CardDescription>
-                  <Button size="sm">Read Guide</Button>
+                  <Button onClick={handleGuideDownload} size="sm">Read Guide</Button>
                 </CardContent>
               </Card>
             ))}
@@ -217,10 +232,8 @@ export function KnowledgeBase() {
                       </span>
                     </div>
                     <div className="space-x-2">
-                      <Button variant="outline" size="icon">
-                        <ExternalLink className="h-4 w-4" />
-                      </Button>
-                      <Button variant="outline" size="icon">
+        
+                      <Button onClick={handleManualDownload} variant="outline" size="icon">
                         <Download className="h-4 w-4" />
                       </Button>
                     </div>
