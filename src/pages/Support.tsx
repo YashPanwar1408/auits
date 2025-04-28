@@ -13,9 +13,8 @@ const Support = () => (
       </p>
       <ul className="max-w-xl text-gray-300 list-disc list-inside space-y-2">
         <li><span className="font-semibold text-green-400">Raise a service ticket</span> from your dashboard</li>
-        <li>Browse our <a href="/knowledgebase" className="text-green-400 underline">Knowledge Base</a></li>
-        <li>Email us at <span className="text-green-300">support@auits.com</span></li>
-        <li>Call us at <span className="text-green-300">(123) 456-7890</span></li>
+        <li>Email us at <span className="text-green-300">info@auitspl.com</span></li>
+        <li>Call or WhatsApp us at <span className="text-green-300">+91 9911791555</span></li>
       </ul>
     </div>
   </div>

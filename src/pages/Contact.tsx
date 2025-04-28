@@ -18,9 +18,9 @@ const Contact = () => (
         <button className="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-2 px-4 rounded transition" type="submit">Send Message</button>
       </form>
       <div className="text-gray-400 text-center">
-        <p>Email: <span className="text-pink-300">support@auits.com</span></p>
-        <p>Phone: <span className="text-pink-300">(123) 456-7890</span></p>
-        <p>Address: <span className="text-pink-300">123 Solar Street, Renewable City</span></p>
+        <p>Email: <span className="text-pink-300">info@auitspl.com</span></p>
+        <p>Phone: <span className="text-pink-300">+91 9911791555</span></p>
+        <p>WhatsApp: <span className="text-pink-300">+91 9911791555</span></p>
       </div>
     </div>
   </div>
