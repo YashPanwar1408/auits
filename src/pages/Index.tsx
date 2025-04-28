@@ -1,6 +1,6 @@
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { ArrowRight, CheckCircle, Shield, Sun, Upload } from "lucide-react";
 
 const Index = () => {
@@ -27,13 +27,7 @@ const Index = () => {
               >
                 Get Started <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
-              <Button 
-                size="lg" 
-                variant="outline" 
-                className="border-white text-white hover:bg-white/10"
-              >
-                Learn More
-              </Button>
+             
             </div>
           </div>
           <div className="lg:w-1/2">
@@ -134,10 +128,10 @@ const Index = () => {
             <div>
               <h3 className="font-semibold mb-4 text-lg">Quick Links</h3>
               <div className="space-y-2">
-                <a href="#" className="block text-gray-400 hover:text-white">About Us</a>
-                <a href="#" className="block text-gray-400 hover:text-white">Services</a>
-                <a href="#" className="block text-gray-400 hover:text-white">Support</a>
-                <a href="#" className="block text-gray-400 hover:text-white">Contact</a>
+                <Link to="/about" className="block text-gray-400 hover:text-white">About Us</Link>
+                <Link to="/services" className="block text-gray-400 hover:text-white">Services</Link>
+                <Link to="/support" className="block text-gray-400 hover:text-white">Support</Link>
+                <Link to="/contact" className="block text-gray-400 hover:text-white">Contact</Link>
               </div>
             </div>
             <div>
