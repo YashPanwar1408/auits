@@ -11,13 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
 import { CreditCard, CheckCircle, Loader2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -38,20 +32,6 @@ export const PaymentForm = () => {
   const { toast } = useToast();
   const { user } = useAuth();
 
-  const loadRazorpayScript = () => {
-    return new Promise((resolve) => {
-      const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
-      script.onload = () => {
-        resolve(true);
-      };
-      script.onerror = () => {
-        resolve(false);
-      };
-      document.body.appendChild(script);
-    });
-  };
-
   const createRazorpayOrder = async () => {
     try {
       const response = await fetch(
@@ -60,7 +40,7 @@ export const PaymentForm = () => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${supabase.auth.getSession().then(({ data }) => data.session?.access_token)}`,
+            Authorization: `Bearer ${(await supabase.auth.getSession()).data.session?.access_token}`,
           },
           body: JSON.stringify({
             action: "create_order",
@@ -85,60 +65,13 @@ export const PaymentForm = () => {
     }
   };
 
-  const verifyPayment = async (paymentData: any) => {
-    try {
-      const response = await fetch(
-        "https://zbbvmrwcwocovbetiofq.supabase.co/functions/v1/razorpay-payment",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${supabase.auth.getSession().then(({ data }) => data.session?.access_token)}`,
-          },
-          body: JSON.stringify({
-            action: "verify_payment",
-            data: paymentData,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || "Payment verification failed");
-      }
-
-      return await response.json();
-    } catch (error: any) {
-      console.error("Payment verification error:", error);
-      throw new Error(error.message || "Error verifying payment");
-    }
-  };
-
-  const savePaymentToDatabase = async (paymentData: any, verified: boolean) => {
-    try {
-      const { data, error } = await supabase.from("payments").insert([
-        {
-          user_id: user?.id,
-          amount: parseFloat(amount),
-          currency: currency,
-          payment_purpose: purpose,
-          razorpay_payment_id: paymentData.razorpay_payment_id,
-          razorpay_order_id: paymentData.razorpay_order_id,
-          razorpay_signature: paymentData.razorpay_signature,
-          status: verified ? "completed" : "failed",
-        },
-      ]);
-
-      if (error) {
-        console.error("Payment save error:", error);
-        throw new Error("Failed to save payment information");
-      }
-
-      return data;
-    } catch (error: any) {
-      console.error("Database save error:", error);
-      throw new Error(error.message || "Error saving payment");
-    }
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = resolve;
+      document.body.appendChild(script);
+    });
   };
 
   const handlePayment = async (e: React.FormEvent) => {
@@ -146,16 +79,11 @@ export const PaymentForm = () => {
     setIsLoading(true);
 
     try {
-      // Load Razorpay script dynamically
-      const scriptLoaded = await loadRazorpayScript();
-      if (!scriptLoaded) {
-        throw new Error("Razorpay SDK failed to load");
-      }
-
-      // Create order
+      await loadRazorpayScript();
       const orderData = await createRazorpayOrder();
+
       const options = {
-        key: "rzp_test_XsaFr0VmwS1kajL", // Your Razorpay Key ID
+        key: "rzp_test_XsnFr0VmwS1kaL",
         amount: orderData.amount,
         currency: orderData.currency,
         name: "AUITS Connect",
@@ -163,37 +91,38 @@ export const PaymentForm = () => {
         order_id: orderData.id,
         handler: async (response: any) => {
           try {
-            const verificationResult = await verifyPayment(response);
-            
-            if (verificationResult.valid) {
-              await savePaymentToDatabase(response, true);
-              setPaymentSuccess(true);
-              toast({
-                title: "Payment Successful",
-                description: "Your payment has been processed successfully.",
-              });
-            } else {
-              await savePaymentToDatabase(response, false);
-              toast({
-                title: "Payment Failed",
-                description: "Payment signature verification failed.",
-                variant: "destructive",
-              });
-            }
+            const { data, error } = await supabase.from("payments").insert([
+              {
+                user_id: user?.id,
+                amount: parseFloat(amount),
+                currency: currency,
+                payment_purpose: purpose,
+                razorpay_payment_id: response.razorpay_payment_id,
+                razorpay_order_id: response.razorpay_order_id,
+                razorpay_signature: response.razorpay_signature,
+                status: "completed",
+              },
+            ]);
+
+            if (error) throw error;
+
+            setPaymentSuccess(true);
+            toast({
+              title: "Payment Successful",
+              description: "Your payment has been processed successfully.",
+            });
           } catch (error: any) {
-            console.error("Payment process error:", error);
+            console.error("Payment save error:", error);
             toast({
               title: "Payment Error",
-              description: error.message || "An error occurred during payment processing",
+              description: "Failed to save payment details",
               variant: "destructive",
             });
-          } finally {
-            setIsLoading(false);
           }
         },
         prefill: {
-          name: user?.user_metadata?.full_name || "John Doe",
-          email: user?.email || "customer@example.com",
+          name: user?.user_metadata?.full_name,
+          email: user?.email,
         },
         theme: {
           color: "#7C3AED",
@@ -203,12 +132,12 @@ export const PaymentForm = () => {
       const rzp = new window.Razorpay(options);
       rzp.open();
     } catch (error: any) {
-      console.error("Payment initialization error:", error);
       toast({
         title: "Payment Error",
-        description: error.message || "Failed to initialize payment",
+        description: error.message || "Failed to process payment",
         variant: "destructive",
       });
+    } finally {
       setIsLoading(false);
     }
   };
@@ -238,7 +167,7 @@ export const PaymentForm = () => {
       <CardHeader>
         <CardTitle>Payment Information</CardTitle>
         <CardDescription>
-          Enter your payment details to make a secure payment
+          Enter your payment details to proceed with the payment
         </CardDescription>
       </CardHeader>
       <form onSubmit={handlePayment}>
@@ -256,19 +185,14 @@ export const PaymentForm = () => {
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
               />
-              <div className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400">
-                $
-              </div>
               <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
                 <Select value={currency} onValueChange={setCurrency}>
                   <SelectTrigger className="w-[80px] h-8 border-0 bg-transparent">
-                    <SelectValue placeholder="USD" />
+                    <SelectValue placeholder="INR" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="inr">INR</SelectItem>
                     <SelectItem value="usd">USD</SelectItem>
-                    <SelectItem value="eur">EUR</SelectItem>
-                    <SelectItem value="gbp">GBP</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -286,7 +210,6 @@ export const PaymentForm = () => {
                 <SelectItem value="upgrade">System Upgrade</SelectItem>
                 <SelectItem value="repair">Repair Service</SelectItem>
                 <SelectItem value="installation">New Installation</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
               </SelectContent>
             </Select>
           </div>

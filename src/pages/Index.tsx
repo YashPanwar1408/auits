@@ -1,8 +1,7 @@
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, CheckCircle, Shield, Sun, Upload, DownloadCloud } from "lucide-react";
+import { ArrowRight, CheckCircle, Shield, Sun, Upload } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -48,12 +47,12 @@ const Index = () => {
       </div>
       
       {/* Features */}
-      <div className="container mx-auto px-4 py-20">
+      <div className="container mx-auto px-4 py-20 bg-[#0f172a]">
         <div className="text-center mb-16">
-          <h2 className="text-3xl lg:text-4xl font-bold mb-4 gradient-text">
+          <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-white">
             Core Features
           </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-xl text-gray-400 max-w-2xl mx-auto">
             Our platform is designed to streamline your solar energy experience with powerful tools 
             and intuitive interfaces.
           </p>
@@ -64,12 +63,12 @@ const Index = () => {
             {
               title: "Customer Support",
               description: "Raise and track service tickets with our intuitive ticketing system",
-              icon: <CheckCircle className="h-10 w-10 text-auits-600" />
+              icon: <CheckCircle className="h-10 w-10 text-purple-500" />
             },
             {
               title: "User Account",
               description: "Secure login with personalized dashboard for your solar system",
-              icon: <Shield className="h-10 w-10 text-solar-600" />
+              icon: <Shield className="h-10 w-10 text-blue-500" />
             },
             {
               title: "Admin Dashboard",
@@ -84,27 +83,27 @@ const Index = () => {
           ].map((feature, index) => (
             <div 
               key={index}
-              className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow"
+              className="bg-[#1e293b] p-6 rounded-xl border border-gray-800 hover:border-purple-500/50 transition-all"
             >
               <div className="mb-4">{feature.icon}</div>
-              <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
-              <p className="text-muted-foreground">{feature.description}</p>
+              <h3 className="text-xl font-semibold mb-2 text-white">{feature.title}</h3>
+              <p className="text-gray-400">{feature.description}</p>
             </div>
           ))}
         </div>
       </div>
       
       {/* CTA Section */}
-      <div className="bg-solar-900 text-white py-16">
+      <div className="bg-[#1e293b] text-white py-16">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-4">Ready to Get Started?</h2>
-          <p className="text-lg mb-8 max-w-2xl mx-auto">
+          <p className="text-lg mb-8 max-w-2xl mx-auto text-gray-400">
             Join thousands of satisfied customers who are already using our platform 
             to manage their solar energy systems.
           </p>
           <Button 
             size="lg" 
-            className="bg-white text-solar-900 hover:bg-gray-100"
+            className="bg-purple-600 hover:bg-purple-700 text-white"
             onClick={() => navigate("/login")}
           >
             Sign Up Now
@@ -113,7 +112,7 @@ const Index = () => {
       </div>
       
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+      <footer className="bg-[#0f172a] text-white py-12">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
