@@ -1,5 +1,4 @@
-
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Layout } from "@/components/Layout";
 import { PaymentForm } from "@/components/PaymentForm";
 import { Button } from "@/components/ui/button";
@@ -15,44 +14,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Download, FileText, Plus } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/contexts/AuthContext";
 
-const payments = [
-  {
-    id: "INV-001",
-    date: "2025-04-15",
-    amount: "$150.00",
-    status: "paid",
-    description: "Monthly Maintenance Fee",
-  },
-  {
-    id: "INV-002",
-    date: "2025-03-15",
-    amount: "$150.00",
-    status: "paid",
-    description: "Monthly Maintenance Fee",
-  },
-  {
-    id: "INV-003",
-    date: "2025-02-15",
-    amount: "$150.00",
-    status: "paid",
-    description: "Monthly Maintenance Fee",
-  },
-  {
-    id: "INV-004",
-    date: "2025-01-15",
-    amount: "$150.00",
-    status: "paid",
-    description: "Monthly Maintenance Fee",
-  },
-  {
-    id: "INV-005",
-    date: "2024-12-15",
-    amount: "$250.00",
-    status: "paid",
-    description: "System Upgrade Service",
-  },
-];
 const Innvoice = () => {
   const link = document.createElement('a');
   link.href = '/downloads/innvoice.png'; // Make sure this is the correct path
@@ -61,7 +25,27 @@ const Innvoice = () => {
   link.click();
   document.body.removeChild(link);
 };
+
 const Billing = () => {
+  const { user } = useAuth();
+  const [payments, setPayments] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [activeTab, setActiveTab] = useState("payment");
+
+  useEffect(() => {
+    const fetchPayments = async () => {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from("payments")
+        .select("*")
+        .eq("user_id", user?.id)
+        .order("created_at", { ascending: false });
+      setPayments(data || []);
+      setLoading(false);
+    };
+    if (user) fetchPayments();
+  }, [user]);
+
   return (
     <Layout>
       <div className="space-y-6">
@@ -147,7 +131,7 @@ const Billing = () => {
                 </div>
 
                 <div className="pt-4">
-                  <Button className="w-full">
+                  <Button className="w-full" onClick={() => setActiveTab("payment")}>
                     <Plus className="mr-2 h-4 w-4" /> Make a Payment
                   </Button>
                 </div>
@@ -173,68 +157,12 @@ const Billing = () => {
           </div>
         </div>
 
-        <Tabs defaultValue="payment" className="w-full max-w-3xl mx-auto">
-          <TabsList className="grid w-full grid-cols-2">
+        <Tabs defaultValue="payment" className="w-full max-w-3xl mx-auto" value={activeTab}>
+          <TabsList className="w-full">
             <TabsTrigger value="payment">Make a Payment</TabsTrigger>
-            <TabsTrigger value="methods">Payment Methods</TabsTrigger>
           </TabsList>
           <TabsContent value="payment" className="pt-6">
             <PaymentForm />
-          </TabsContent>
-          <TabsContent value="methods" className="pt-6">
-            <Card>
-              <CardHeader>
-                <CardTitle>Saved Payment Methods</CardTitle>
-                <CardDescription>
-                  Manage your saved payment methods
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-md bg-blue-100 flex items-center justify-center">
-                      <img
-                        src="https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/visa.svg"
-                        className="h-6 w-6"
-                        alt="Visa"
-                      />
-                    </div>
-                    <div>
-                      <p className="font-medium">Visa ending in 4242</p>
-                      <p className="text-sm text-muted-foreground">
-                        Expires 06/2028
-                      </p>
-                    </div>
-                  </div>
-                  <Badge>Default</Badge>
-                </div>
-
-                <div className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center gap-4">
-                    <div className="h-12 w-12 rounded-md bg-red-100 flex items-center justify-center">
-                      <img
-                        src="https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/mastercard.svg"
-                        className="h-6 w-6"
-                        alt="Mastercard"
-                      />
-                    </div>
-                    <div>
-                      <p className="font-medium">Mastercard ending in 5555</p>
-                      <p className="text-sm text-muted-foreground">
-                        Expires 09/2027
-                      </p>
-                    </div>
-                  </div>
-                  <Button variant="outline" size="sm">
-                    Set Default
-                  </Button>
-                </div>
-
-                <Button className="w-full">
-                  <Plus className="mr-2 h-4 w-4" /> Add New Payment Method
-                </Button>
-              </CardContent>
-            </Card>
           </TabsContent>
         </Tabs>
       </div>
