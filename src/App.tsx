@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -17,6 +16,10 @@ import NotFound from "./pages/NotFound";
 import { AuthProvider } from "./contexts/AuthContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import UserDashboard from "./pages/UserDashboard";
+import AboutUs from "./pages/AboutUs";
+import Services from "./pages/Services";
+import Support from "./pages/Support";
+import Contact from "./pages/Contact";
 
 const queryClient = new QueryClient();
 
@@ -72,6 +75,12 @@ const App = () => (
                 <UserDashboard />
               </ProtectedRoute>
             } />
+            
+            {/* Public Routes */}
+            <Route path="/about" element={<AboutUs />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/support" element={<Support />} />
+            <Route path="/contact" element={<Contact />} />
             
             <Route path="*" element={<NotFound />} />
           </Routes>
