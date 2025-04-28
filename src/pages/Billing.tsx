@@ -25,6 +25,30 @@ const Innvoice = () => {
   link.click();
   document.body.removeChild(link);
 };
+const Annual = () => {
+  const link = document.createElement('a');
+  link.href = '/downloads/Annual.pdf'; // Make sure this is the correct path
+  link.download = 'Annual Statement.pdf'; // The name you want the file to be downloaded as
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+const Tax = () => {
+  const link = document.createElement('a');
+  link.href = '/downloads/Tax.pdf'; // Make sure this is the correct path
+  link.download = 'Tax Statement.pdf'; // The name you want the file to be downloaded as
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
+const Warranty = () => {
+  const link = document.createElement('a');
+  link.href = '/downloads/Warranty.pdf'; // Make sure this is the correct path
+  link.download = 'Warranty.pdf'; // The name you want the file to be downloaded as
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+};
 
 const Billing = () => {
   const { user } = useAuth();
@@ -143,13 +167,13 @@ const Billing = () => {
                 <CardTitle>Billing Documents</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                <Button variant="outline" className="w-full justify-start">
+                <Button onClick={Annual} variant="outline" className="w-full justify-start">
                   <FileText className="mr-2 h-4 w-4" /> Annual Statement (2024)
                 </Button>
-                <Button variant="outline" className="w-full justify-start">
+                <Button onClick={Tax} variant="outline" className="w-full justify-start">
                   <FileText className="mr-2 h-4 w-4" /> Tax Certificate (2024)
                 </Button>
-                <Button variant="outline" className="w-full justify-start">
+                <Button  onClick={Warranty} variant="outline" className="w-full justify-start">
                   <FileText className="mr-2 h-4 w-4" /> Warranty Information
                 </Button>
               </CardContent>
