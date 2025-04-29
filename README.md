@@ -1,73 +1,48 @@
-# Welcome to your Lovable project
+# AUITS CustomerCare Service
 
-## Project info
+[Live Demo 🚀](https://auits-customercare-service.vercel.app/)  
+[GitHub Repo 📂](https://github.com/YashPanwar1408/auits)
 
-**URL**: https://lovable.dev/projects/7ebfe858-ee1e-4a09-a7bb-3410349221f7
+---
 
-## How can I edit this code?
+## 📌 Overview
 
-There are several ways of editing your application.
+**AUITS CustomerCare Service** is a modern web-based platform designed to streamline customer support and engagement for businesses. It offers a seamless user experience through real-time AI chatbot assistance, an organized ticketing system, and robust billing and payment features. With dedicated dashboards for both users and administrators, the platform ensures efficient support delivery and easy account management.
 
-**Use Lovable**
+---
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/7ebfe858-ee1e-4a09-a7bb-3410349221f7) and start prompting.
+## 🌟 Features
 
-Changes made via Lovable will be committed automatically to this repo.
+- 🤖 **AI Chatbot** — Provides instant, 24/7 support and answers to customer queries using conversational AI.
+- 📝 **Ticketing System** — Allows users to raise and track issues, ensuring transparent and timely resolutions.
+- 💳 **Payment Integration** — Secure and seamless transactions through integrated payment gateways.
+- 🧾 **Billing System** — Automates invoicing and manages user payment history and subscriptions.
+- 🛠️ **Admin Dashboard** — Full control over ticket handling, user management, billing, and analytics.
+- 👤 **User Dashboard** — Personalized portal to manage support tickets, payments, and account settings.
+- 🌗 **Theme Toggler** — Supports light and dark modes to enhance the visual experience.
 
-**Use your preferred IDE**
+---
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+## 🔧 Tech Stack
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+- **Frontend:** React.js
+- **Backend:** Node.js / Express (assumed if backend exists)
+- **Styling:** Tailwind CSS / CSS Modules
+- **Hosting:** [Vercel](https://vercel.com)
+- **Auth & APIs:** Google OAuth, REST APIs
+- **Payment Integration:** (Add the service used, e.g., Stripe, Razorpay, etc.)
 
-Follow these steps:
+---
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+## 📁 Installation & Setup
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+```bash
+# Clone the repository
+git clone https://github.com/YashPanwar1408/auits.git
+cd auits
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Install dependencies
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Start development server
 npm run dev
-```
-
-**Edit a file directly in GitHub**
-
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
-
-**Use GitHub Codespaces**
-
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
-
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/7ebfe858-ee1e-4a09-a7bb-3410349221f7) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
