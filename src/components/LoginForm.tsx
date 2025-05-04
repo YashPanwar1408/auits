@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -39,18 +38,18 @@ export const LoginForm = () => {
   };
 
   return (
-    <Card className="w-full">
+    <Card className="w-full bg-gradient-to-br from-[#18182f] via-[#23233a] to-[#18182f] border border-purple-500/20 shadow-xl text-white backdrop-blur-xl">
       <CardHeader>
-        <CardTitle>Account Login</CardTitle>
-        <CardDescription>
+        <CardTitle className="text-white">Account Login</CardTitle>
+        <CardDescription className="text-white/70">
           Sign in to access your solar system dashboard and support
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <Button 
-          className="w-full" 
-          variant="outline" 
-          onClick={handleGoogleLogin} 
+        <Button
+          className="w-full bg-white/10 text-white border border-white/10 hover:bg-purple-500/30 hover:text-white"
+          variant="outline"
+          onClick={handleGoogleLogin}
           disabled={isLoading}
         >
           {isLoading ? (
@@ -65,7 +64,7 @@ export const LoginForm = () => {
         </Button>
       </CardContent>
       <CardFooter className="flex justify-center">
-        <p className="text-xs text-muted-foreground text-center">
+        <p className="text-xs text-white/50 text-center">
           By signing in, you agree to our Terms of Service and Privacy Policy
         </p>
       </CardFooter>
