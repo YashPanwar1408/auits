@@ -36,15 +36,16 @@ export const LoginForm = () => {
       </CardHeader>
       <CardContent className="space-y-4">
         <SignIn
-          routing="path"
-          path="/login"
-          signInUrl="/login"
           afterSignInUrl="/dashboard"
+          afterSignUpUrl="/dashboard"
+          redirectUrl="/dashboard"
           appearance={{
             elements: {
               formButtonPrimary: 
                 "bg-primary hover:bg-primary/90 text-primary-foreground",
               card: "w-full shadow-none border-0 p-0",
+              rootBox: "mx-auto",
+              formContainer: "mx-auto",
             }
           }}
         />
