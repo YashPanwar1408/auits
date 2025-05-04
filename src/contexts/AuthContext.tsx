@@ -1,46 +1,108 @@
 
-import React, { createContext, useContext } from "react";
-import { useUser, useAuth as useClerkAuth, SignInButton, SignOutButton } from "@clerk/clerk-react";
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { Session, User } from "@supabase/supabase-js";
+import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
 interface AuthContextType {
-  user: any | null;
+  session: Session | null;
+  user: User | null;
   profile: any | null;
-  signInWithGoogle: () => void;
-  signOut: () => void;
+  signInWithGoogle: () => Promise<void>;
+  signOut: () => Promise<void>;
   loading: boolean;
   isAuthenticated: boolean;
-  session: any | null;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const { isLoaded: clerkLoaded, isSignedIn, user } = useUser();
-  const { signOut: clerkSignOut } = useClerkAuth();
+  const [loading, setLoading] = useState(true);
+  const [session, setSession] = useState<Session | null>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<any | null>(null);
   const { toast } = useToast();
 
-  // Simulate profile data structure from the previous implementation
-  const profile = user ? {
-    id: user.id,
-    first_name: user.firstName,
-    last_name: user.lastName,
-    email: user.primaryEmailAddress?.emailAddress,
-    avatar_url: user.imageUrl,
-  } : null;
+  useEffect(() => {
+    // Set up auth state listener first
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event, currentSession) => {
+      console.log("Auth state changed:", event);
+      setSession(currentSession);
+      setUser(currentSession?.user ?? null);
+      
+      if (currentSession?.user) {
+        setTimeout(() => {
+          fetchUserProfile(currentSession.user.id);
+        }, 0);
+      } else {
+        setProfile(null);
+      }
+    });
+
+    // Then check for existing session
+    supabase.auth.getSession().then(({ data: { session: currentSession } }) => {
+      setSession(currentSession);
+      setUser(currentSession?.user ?? null);
+      
+      if (currentSession?.user) {
+        fetchUserProfile(currentSession.user.id);
+      }
+      
+      setLoading(false);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  async function fetchUserProfile(userId: string) {
+    try {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", userId)
+        .single();
+
+      if (error) {
+        console.error("Error fetching profile:", error);
+        return;
+      }
+
+      setProfile(data);
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+    }
+  }
 
   async function signInWithGoogle() {
-    // With Clerk, this is handled by the SignInButton component
-    // This function remains for compatibility with existing code
-    toast({
-      title: "Authentication",
-      description: "Please use the sign-in button on the login page",
-    });
+    try {
+      const { error } = await supabase.auth.signInWithOAuth({
+        provider: "google",
+        options: {
+          redirectTo: 'https://preview--auits.lovable.app/dashboard'
+        }
+      });
+
+      if (error) {
+        toast({
+          title: "Login Failed",
+          description: error.message,
+          variant: "destructive",
+        });
+      }
+    } catch (error: any) {
+      toast({
+        title: "Login Error",
+        description: error.message || "An error occurred during login",
+        variant: "destructive",
+      });
+    }
   }
 
   async function signOut() {
     try {
-      await clerkSignOut();
+      await supabase.auth.signOut();
       toast({
         title: "Logged Out",
         description: "You have been successfully logged out",
@@ -57,13 +119,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   return (
     <AuthContext.Provider
       value={{
-        session: isSignedIn ? { user } : null, // Mock session object for compatibility
-        user: isSignedIn ? user : null,
+        session,
+        user,
         profile,
         signInWithGoogle,
         signOut,
-        loading: !clerkLoaded,
-        isAuthenticated: !!isSignedIn,
+        loading,
+        isAuthenticated: !!user,
       }}
     >
       {children}

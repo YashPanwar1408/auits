@@ -46,7 +46,7 @@ const Login = () => {
             </div>
           </div>
         </div>
-        <div className="w-full md:w-1/2 p-8 flex items-center justify-center">
+        <div className="w-full md:w-1/2 p-8">
           <LoginForm />
         </div>
       </div>
