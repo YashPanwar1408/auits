@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from "@/components/ui/sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
@@ -111,6 +112,14 @@ export const Layout = ({ children }: LayoutProps) => {
             const isActive = location.pathname === item.path;
             const Icon = item.icon;
             
+            // Handle the Home item specially to ensure it goes to the new index page
+            const handleClick = (e: React.MouseEvent) => {
+              if (item.name === "Home") {
+                e.preventDefault();
+                navigate("/");
+              }
+            };
+            
             return (
               <NavLink 
                 key={item.name} 
@@ -120,6 +129,7 @@ export const Layout = ({ children }: LayoutProps) => {
                     ? "bg-sidebar-accent text-sidebar-accent-foreground" 
                     : "text-sidebar-foreground hover:bg-sidebar-accent/50"
                 }`}
+                onClick={handleClick}
               >
                 <Icon className="h-5 w-5" />
                 <span>{item.name}</span>
