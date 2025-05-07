@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from "@/components/ui/sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
@@ -60,8 +59,13 @@ export const Layout = ({ children }: LayoutProps) => {
     navigate("/login");
   };
 
+  const handleHomeClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    navigate("/");
+  };
+
   const navigationItems = [
-    { name: "Home", path: "/", icon: Home },
+    { name: "Home", path: "/", icon: Home, onClick: handleHomeClick },
     { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
     { name: "Support Tickets", path: "/tickets", icon: MessageSquare },
     { name: "Knowledge Base", path: "/knowledge", icon: FileText },
@@ -112,14 +116,6 @@ export const Layout = ({ children }: LayoutProps) => {
             const isActive = location.pathname === item.path;
             const Icon = item.icon;
             
-            // Handle the Home item specially to ensure it goes to the new index page
-            const handleClick = (e: React.MouseEvent) => {
-              if (item.name === "Home") {
-                e.preventDefault();
-                navigate("/");
-              }
-            };
-            
             return (
               <NavLink 
                 key={item.name} 
@@ -129,7 +125,7 @@ export const Layout = ({ children }: LayoutProps) => {
                     ? "bg-sidebar-accent text-sidebar-accent-foreground" 
                     : "text-sidebar-foreground hover:bg-sidebar-accent/50"
                 }`}
-                onClick={handleClick}
+                onClick={item.onClick}
               >
                 <Icon className="h-5 w-5" />
                 <span>{item.name}</span>
