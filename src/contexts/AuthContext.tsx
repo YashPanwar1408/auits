@@ -79,8 +79,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
         options: {
-          redirectTo: 'https://preview-019cbe21--auits.lovable.app/dashboard'
-        }
+          redirectTo: `${window.location.origin}/dashboard`
+        }        
       });
 
       if (error) {
