@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { 
   Sun, 
   Moon, 
-  Home,
   LayoutDashboard, 
   MessageSquare, 
   FileText, 
@@ -59,13 +58,7 @@ export const Layout = ({ children }: LayoutProps) => {
     navigate("/login");
   };
 
-  const handleHomeClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-    navigate("/");
-  };
-
   const navigationItems = [
-    { name: "Home", path: "/", icon: Home, onClick: handleHomeClick },
     { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
     { name: "Support Tickets", path: "/tickets", icon: MessageSquare },
     { name: "Knowledge Base", path: "/knowledge", icon: FileText },
