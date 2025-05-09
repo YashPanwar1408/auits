@@ -1,9 +1,8 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
@@ -30,61 +29,62 @@ const App = () => (
       <TooltipProvider>
         <Toaster />
         <Sonner />
-        <Routes>
-          {/* Root path goes to the new Index page */}
-          <Route path="/" element={<Index />} />
-          <Route path="/login" element={<Login />} />
-          
-          {/* Protected Routes */}
-          <Route path="/dashboard" element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          } />
-          <Route path="/tickets" element={
-            <ProtectedRoute>
-              <Tickets />
-            </ProtectedRoute>
-          } />
-          <Route path="/tickets/new" element={
-            <ProtectedRoute>
-              <NewTicket />
-            </ProtectedRoute>
-          } />
-          <Route path="/knowledge" element={
-            <ProtectedRoute>
-              <KnowledgeBase />
-            </ProtectedRoute>
-          } />
-          <Route path="/billing" element={
-            <ProtectedRoute>
-              <Billing />
-            </ProtectedRoute>
-          } />
-          <Route path="/help" element={
-            <ProtectedRoute>
-              <Help />
-            </ProtectedRoute>
-          } />
-          <Route path="/settings" element={
-            <ProtectedRoute>
-              <Settings />
-            </ProtectedRoute>
-          } />
-          <Route path="/user" element={
-            <ProtectedRoute>
-              <UserDashboard />
-            </ProtectedRoute>
-          } />
-          
-          {/* Public Routes */}
-          <Route path="/about" element={<AboutUs />} />
-          <Route path="/services" element={<Services />} />
-          <Route path="/support" element={<Support />} />
-          <Route path="/contact" element={<Contact />} />
-          
-          <Route path="*" element={<NotFound />} />
-        </Routes>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Index />} />
+            <Route path="/login" element={<Login />} />
+            
+            {/* Protected Routes */}
+            <Route path="/dashboard" element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            } />
+            <Route path="/tickets" element={
+              <ProtectedRoute>
+                <Tickets />
+              </ProtectedRoute>
+            } />
+            <Route path="/tickets/new" element={
+              <ProtectedRoute>
+                <NewTicket />
+              </ProtectedRoute>
+            } />
+            <Route path="/knowledge" element={
+              <ProtectedRoute>
+                <KnowledgeBase />
+              </ProtectedRoute>
+            } />
+            <Route path="/billing" element={
+              <ProtectedRoute>
+                <Billing />
+              </ProtectedRoute>
+            } />
+            <Route path="/help" element={
+              <ProtectedRoute>
+                <Help />
+              </ProtectedRoute>
+            } />
+            <Route path="/settings" element={
+              <ProtectedRoute>
+                <Settings />
+              </ProtectedRoute>
+            } />
+            <Route path="/user" element={
+              <ProtectedRoute>
+                <UserDashboard />
+              </ProtectedRoute>
+            } />
+            
+            {/* Public Routes */}
+            <Route path="/about" element={<AboutUs />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/support" element={<Support />} />
+            <Route path="/contact" element={<Contact />} />
+            
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </BrowserRouter>
       </TooltipProvider>
     </AuthProvider>
   </QueryClientProvider>

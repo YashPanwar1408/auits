@@ -3,15 +3,6 @@ import { Button } from "@/components/ui/button";
 import { useNavigate, Link } from "react-router-dom";
 import { ArrowRight, CheckCircle, Shield, Sun, Upload } from "lucide-react";
 import { motion } from "framer-motion";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
 
 const features = [
   {
@@ -41,68 +32,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#0a0a1a] via-[#18182f] to-[#0a0a1a] flex flex-col">
-      {/* Header Navigation */}
-      <header className="w-full p-4 absolute top-0 z-50">
-        <div className="container mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="h-10 w-10 rounded-full bg-white flex items-center justify-center">
-              <img
-                src="/lovable-uploads/43bdef48-c3ad-42fe-8ae5-fd7f4e37c15a.png"
-                alt="AUITS Logo"
-                className="h-8 w-8"
-              />
-            </div>
-            <h1 className="font-bold text-2xl text-white">AUITS Connect</h1>
-          </div>
-          <div className="hidden md:flex items-center gap-4">
-            <NavigationMenu>
-              <NavigationMenuList>
-                <NavigationMenuItem>
-                  <Link to="/" className="text-white hover:text-purple-300 px-3 py-2">
-                    Home
-                  </Link>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <Link to="/about" className="text-white hover:text-purple-300 px-3 py-2">
-                    About
-                  </Link>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <Link to="/services" className="text-white hover:text-purple-300 px-3 py-2">
-                    Services
-                  </Link>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <Link to="/support" className="text-white hover:text-purple-300 px-3 py-2">
-                    Support
-                  </Link>
-                </NavigationMenuItem>
-                <NavigationMenuItem>
-                  <Link to="/contact" className="text-white hover:text-purple-300 px-3 py-2">
-                    Contact
-                  </Link>
-                </NavigationMenuItem>
-              </NavigationMenuList>
-            </NavigationMenu>
-            <Button 
-              onClick={() => navigate("/login")}
-              className="bg-white text-purple-700 hover:bg-purple-100"
-            >
-              Login / Sign Up
-            </Button>
-          </div>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden text-white"
-            onClick={() => navigate("/login")}
-          >
-            <ArrowRight className="h-5 w-5" />
-          </Button>
-        </div>
-      </header>
-
-      {/* Hero Section with Spline Bulb */}
+      {/* Hero Section with Spline Bulb on the right, seamless background */}
       <div className="relative w-full h-[95vh] min-h-[600px] flex flex-col lg:flex-row items-center justify-between overflow-hidden px-4 lg:px-16 bg-gradient-to-br from-[#0a0a1a] via-[#18182f] to-[#0a0a1a]">
         {/* Hero Content Left */}
         <div className="relative z-10 flex-1 flex flex-col items-center lg:items-start justify-center text-center lg:text-left">
@@ -137,44 +67,45 @@ const Index = () => {
             </Button>
           </motion.div>
         </div>
-        
-        {/* Spline Bulb on the right */}
-        <div className="flex-1 flex items-center justify-center w-full h-[350px] lg:h-[500px] mt-12 lg:mt-0">
-          <div className="w-full h-full max-w-xl max-h-[500px] rounded-3xl overflow-hidden flex items-center justify-center relative shadow-2xl border border-purple-500/20">
-            {/* Soft background gradient based on uploaded image */}
-            <div
-              className="absolute inset-0 z-0 rounded-3xl"
-              style={{
-                background: 'linear-gradient(135deg, #0a0a1a 0%, #18182f 40%, #44345c 75%, #facc15 100%)',
-                opacity: 0.3,
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-              }}
-            />
+        {/* Spline Bulb on the right, with glow and seamless background */}
+        {/* Spline Bulb on the right, with matching background and glow effect */}
+<div className="flex-1 flex items-center justify-center w-full h-[350px] lg:h-[500px] mt-12 lg:mt-0">
+  <div className="w-full h-full max-w-xl max-h-[500px] rounded-3xl overflow-hidden flex items-center justify-center relative shadow-2xl border border-purple-500/20">
+    {/* Soft background gradient based on uploaded image */}
+    <div
+      className="absolute inset-0 z-0 rounded-3xl"
+      style={{
+        background: 'linear-gradient(135deg, #0a0a1a 0%, #18182f 40%, #44345c 75%, #facc15 100%)',
+        opacity: 0.3,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }}
+    />
 
-            {/* Optional: subtle glow behind the bulb */}
-            <div className="absolute inset-0 m-auto w-[90%] h-[90%] rounded-full pointer-events-none bg-gradient-radial from-yellow-300/20 via-transparent to-transparent blur-2xl opacity-70 z-10" />
+    {/* Optional: subtle glow behind the bulb */}
+    <div className="absolute inset-0 m-auto w-[90%] h-[90%] rounded-full pointer-events-none bg-gradient-radial from-yellow-300/20 via-transparent to-transparent blur-2xl opacity-70 z-10" />
 
-            {/* Spline iframe */}
-            <iframe
-              src="https://my.spline.design/lightningbulb-IUiVaMAoaWtqDxp0ZVhKpSgv/"
-              frameBorder="0"
-              width="100%"
-              height="100%"
-              title="AUITS 3D Bulb"
-              loading="lazy"
-              allowFullScreen
-              style={{
-                width: '100%',
-                height: '100%',
-                minHeight: 350,
-                minWidth: 320,
-                background: 'transparent',
-                zIndex: 20,
-              }}
-            />
-          </div>
-        </div>
+    {/* Spline iframe */}
+    <iframe
+      src="https://my.spline.design/lightningbulb-IUiVaMAoaWtqDxp0ZVhKpSgv/"
+      frameBorder="0"
+      width="100%"
+      height="100%"
+      title="AUITS 3D Bulb"
+      loading="lazy"
+      allowFullScreen
+      style={{
+        width: '100%',
+        height: '100%',
+        minHeight: 350,
+        minWidth: 320,
+        background: 'transparent',
+        zIndex: 20,
+      }}
+    />
+  </div>
+</div>
+
       </div>
 
       {/* Features Section with 3D/tilt animation */}
