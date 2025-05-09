@@ -101,7 +101,7 @@ export const Layout = ({ children }: LayoutProps) => {
               className="h-6 w-6"
             />
           </div>
-          <h1 className="font-bold text-xl text-white">AUITS Connect</h1>
+          <h1 className="font-bold text-xl text-white">SolMate</h1>
         </div>
       </SidebarHeader>
       

@@ -42,7 +42,7 @@ const Index = () => {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-5xl lg:text-7xl font-extrabold leading-tight text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 via-pink-400 to-purple-600 mb-6 drop-shadow"
           >
-            AUITS Solar Platform
+            SolMate
           </motion.h1>
           <motion.p
             initial={{ y: 20, opacity: 0 }}
