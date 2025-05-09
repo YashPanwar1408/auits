@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { 
   Sun, 
   Moon, 
-  Home,
   LayoutDashboard, 
   MessageSquare, 
   FileText, 
@@ -60,7 +59,6 @@ export const Layout = ({ children }: LayoutProps) => {
   };
 
   const navigationItems = [
-    { name: "Home", path: "/", icon: Home },
     { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
     { name: "Support Tickets", path: "/tickets", icon: MessageSquare },
     { name: "Knowledge Base", path: "/knowledge", icon: FileText },
