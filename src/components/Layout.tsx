@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader } from "@/components/ui/sidebar";
 import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
@@ -23,6 +24,13 @@ import { useToast } from "@/hooks/use-toast";
 
 interface LayoutProps {
   children: React.ReactNode;
+}
+
+// Define a proper interface for navigation items
+interface NavigationItem {
+  name: string;
+  path: string;
+  icon: React.ForwardRefExoticComponent<any>;
 }
 
 export const Layout = ({ children }: LayoutProps) => {
@@ -58,7 +66,8 @@ export const Layout = ({ children }: LayoutProps) => {
     navigate("/login");
   };
 
-  const navigationItems = [
+  // Update navigationItems to use the proper type
+  const navigationItems: NavigationItem[] = [
     { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard },
     { name: "Support Tickets", path: "/tickets", icon: MessageSquare },
     { name: "Knowledge Base", path: "/knowledge", icon: FileText },
@@ -118,7 +127,6 @@ export const Layout = ({ children }: LayoutProps) => {
                     ? "bg-sidebar-accent text-sidebar-accent-foreground" 
                     : "text-sidebar-foreground hover:bg-sidebar-accent/50"
                 }`}
-                onClick={item.onClick}
               >
                 <Icon className="h-5 w-5" />
                 <span>{item.name}</span>
